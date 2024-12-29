@@ -9,13 +9,18 @@ import {
   table_getColumn,
   table_getDefaultColumnDef,
 } from './coreColumnsFeature.utils'
-
-import type { TableFeature } from '../../types/TableFeatures'
+import type {
+  Column_Column,
+  TableOptions_Columns,
+  Table_Columns,
+} from './coreColumnsFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
 export const coreColumnsFeature: TableFeature<{
-  // Column: Column_Column<TableFeatures, RowData, CellData>
-  // Table: Table_Columns<TableFeatures, RowData>
-  // TableOptions: TableOptions_Columns<TableFeatures, RowData>
+  Column: Column_Column<TableFeatures, RowData>
+  Table: Table_Columns<TableFeatures, RowData>
+  TableOptions: TableOptions_Columns<TableFeatures, RowData>
 }> = {
   constructColumnAPIs: (column) => {
     const { _table: table } = column

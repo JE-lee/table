@@ -11,13 +11,18 @@ import {
   table_getRow,
   table_getRowId,
 } from './coreRowsFeature.utils'
-
-import type { TableFeature } from '../../types/TableFeatures'
+import type {
+  Row_Row,
+  TableOptions_Rows,
+  Table_Rows,
+} from './coreRowsFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
 export const coreRowsFeature: TableFeature<{
-  // Row: Row_Row<TableFeatures, RowData>
-  // TableOptions: TableOptions_Rows<TableFeatures, RowData>
-  // Table: Table_Rows<TableFeatures, RowData>
+  Row: Row_Row<TableFeatures, RowData>
+  TableOptions: TableOptions_Rows<TableFeatures, RowData>
+  Table: Table_Rows<TableFeatures, RowData>
 }> = {
   constructRowAPIs: (row) => {
     assignAPIs(row, [

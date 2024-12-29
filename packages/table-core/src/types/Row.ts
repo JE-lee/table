@@ -1,14 +1,22 @@
-import type { Row_Row } from '../core/rows/coreRowsFeature.types'
+import type { coreFeatures } from '../core/coreFeatures'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 import type { RowData } from './type-utils'
 
-export interface Row_Plugins {}
-
-export interface Row_Core<
+export interface Row_Plugins<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> extends Row_Row<TFeatures, TData>,
-    Row_Plugins {}
+> {}
+
+// export interface Row_Core<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+// > extends Row_Row<TFeatures, TData>,
+//     Row_Plugins {}
+
+export type Row_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = ExtractFeatureTypes<typeof coreFeatures, 'Row'>
 
 // export type Row<
 //   TFeatures extends TableFeatures,
@@ -37,5 +45,5 @@ export type Row<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Row_Core<TFeatures, TData> &
-  Row_Plugins &
-  ExtractFeatureTypes<TFeatures, 'Row'>
+  ExtractFeatureTypes<TFeatures, 'Row'> &
+  Row_Plugins<TFeatures, TData>

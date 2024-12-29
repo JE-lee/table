@@ -12,13 +12,18 @@ import {
   table_getHeaderGroups,
   table_getLeafHeaders,
 } from './coreHeadersFeature.utils'
-
-import type { TableFeature } from '../../types/TableFeatures'
+import type {
+  Header_Header,
+  TableOptions_Headers,
+  Table_Headers,
+} from './coreHeadersFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
 export const coreHeadersFeature: TableFeature<{
-  // Header: Header_Header<TableFeatures, RowData, CellData>
-  // Table: Table_Headers<TableFeatures, RowData>
-  // TableOptions: TableOptions_Headers
+  Header: Header_Header<TableFeatures, RowData>
+  Table: Table_Headers<TableFeatures, RowData>
+  TableOptions: TableOptions_Headers
 }> = {
   constructHeaderAPIs: (header) => {
     assignAPIs(header, [

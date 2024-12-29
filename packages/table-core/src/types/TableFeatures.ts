@@ -18,10 +18,8 @@ export type ExtractFeatureTypes<
     [K in keyof TFeatures]: TFeatures[K] extends TableFeature<
       infer FeatureConstructorOptions
     >
-      ? TKey extends keyof FeatureConstructorOptions
-        ? FeatureConstructorOptions[TKey]
-        : never
-      : any
+      ? FeatureConstructorOptions[TKey]
+      : never
   }[keyof TFeatures]
 >
 
@@ -89,14 +87,12 @@ export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->() => ColumnDefBase_All<TFeatures, TData, TValue> &
-  Partial<TConstructors['ColumnDef']>
+>() => ColumnDefBase_All<TData, TValue> & Partial<TConstructors['ColumnDef']>
 
 export type GetDefaultTableOptions<TConstructors extends FeatureConstructors> =
   <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
-  ) => Partial<TableOptions_All<TFeatures, TData>> &
-    Partial<TConstructors['TableOptions']>
+  ) => Partial<TableOptions_All<TData>> & Partial<TConstructors['TableOptions']>
 
 export type GetInitialState<TConstructors extends FeatureConstructors> = (
   initialState: Partial<TableState_All> & Partial<TConstructors['TableState']>,

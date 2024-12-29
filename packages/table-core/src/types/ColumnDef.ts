@@ -1,17 +1,15 @@
+import type { coreFeatures } from '../core/coreFeatures'
+import type { stockFeatures } from '../features/stockFeatures'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 import type { CellContext } from '../core/cells/coreCellsFeature.types'
 import type { HeaderContext } from '../core/headers/coreHeadersFeature.types'
-import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
-import type { ColumnDef_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
-import type { ColumnDef_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
-import type { ColumnDef_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
-import type { ColumnDef_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
-import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
-import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
-import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
-export interface ColumnDef_Plugins {}
+export interface ColumnDef_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {}
 
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
@@ -53,11 +51,22 @@ type ColumnIdentifiers<
   TValue extends CellData = CellData,
 > = IdIdentifier<TFeatures, TData, TValue> | StringHeaderIdentifier
 
-interface ColumnDefBase_Core<
+// interface ColumnDefBase_Core<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+//   TValue extends CellData = CellData,
+// > extends ColumnDef_Plugins {
+//   getUniqueValues?: AccessorFn<TData, Array<unknown>>
+//   footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
+//   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
+//   meta?: ColumnMeta<TFeatures, TData, TValue>
+// }
+
+export type ColumnDefBase_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-> extends ColumnDef_Plugins {
+> = ExtractFeatureTypes<typeof coreFeatures, 'ColumnDef'> & {
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
   footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
@@ -101,23 +110,29 @@ export type ColumnDefBase<
   TData extends RowData,
   TValue extends CellData = CellData,
 > = ColumnDefBase_Core<TFeatures, TData, TValue> &
-  ExtractFeatureTypes<TFeatures, 'ColumnDef'>
+  ExtractFeatureTypes<TFeatures, 'ColumnDef'> &
+  ColumnDef_Plugins<TFeatures, TData, TValue>
+
+// export type ColumnDefBase_All<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+//   TValue extends CellData = CellData,
+// > = ColumnDefBase_Core<TFeatures, TData, TValue> &
+//   Partial<
+//     ColumnDef_ColumnVisibility &
+//       ColumnDef_ColumnPinning &
+//       ColumnDef_ColumnFiltering<TFeatures, TData> &
+//       ColumnDef_GlobalFiltering &
+//       ColumnDef_RowSorting<TFeatures, TData> &
+//       ColumnDef_ColumnGrouping<TFeatures, TData, TValue> &
+//       ColumnDef_ColumnSizing &
+//       ColumnDef_ColumnResizing
+//   >
 
 export type ColumnDefBase_All<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase_Core<TFeatures, TData, TValue> &
-  Partial<
-    ColumnDef_ColumnVisibility &
-      ColumnDef_ColumnPinning &
-      ColumnDef_ColumnFiltering<TFeatures, TData> &
-      ColumnDef_GlobalFiltering &
-      ColumnDef_RowSorting<TFeatures, TData> &
-      ColumnDef_ColumnGrouping<TFeatures, TData, TValue> &
-      ColumnDef_ColumnSizing &
-      ColumnDef_ColumnResizing
-  >
+> = ColumnDefBase<typeof stockFeatures, TData, TValue>
 
 export type IdentifiedColumnDef<
   TFeatures extends TableFeatures,

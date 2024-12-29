@@ -1,12 +1,19 @@
-import type { RowModelFns_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-import type { RowModelFns_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
+import type { coreFeatures } from '../core/coreFeatures'
 import type { RowData } from './type-utils'
-import type { RowModelFns_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
+import type { stockFeatures } from '../features/stockFeatures'
 
-export interface RowModelFns_Plugins {}
+export interface RowModelFns_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
-export interface RowModelFns_Core extends RowModelFns_Plugins {}
+// export interface RowModelFns_Core extends RowModelFns_Plugins {}
+
+export type RowModelFns_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = ExtractFeatureTypes<typeof coreFeatures, 'RowModelFns'>
 
 // export type RowModelFns<
 //   TFeatures extends TableFeatures,
@@ -29,13 +36,20 @@ export interface RowModelFns_Core extends RowModelFns_Plugins {}
 export type RowModelFns<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = RowModelFns_Core & ExtractFeatureTypes<TFeatures, 'RowModelFns'>
+> = RowModelFns_Core<TFeatures, TData> &
+  ExtractFeatureTypes<TFeatures, 'RowModelFns'> &
+  RowModelFns_Plugins<TFeatures, TData>
 
-export type RowModelFns_All<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = Partial<
-  RowModelFns_ColumnFiltering<TFeatures, TData> &
-    RowModelFns_ColumnGrouping<TFeatures, TData> &
-    RowModelFns_RowSorting<TFeatures, TData>
+// export type RowModelFns_All<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+// > = Partial<
+//   RowModelFns_ColumnFiltering<TFeatures, TData> &
+//     RowModelFns_ColumnGrouping<TFeatures, TData> &
+//     RowModelFns_RowSorting<TFeatures, TData>
+// >
+
+export type RowModelFns_All<TData extends RowData = RowData> = RowModelFns<
+  typeof stockFeatures,
+  TData
 >

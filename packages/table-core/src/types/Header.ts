@@ -1,15 +1,25 @@
+import type { coreFeatures } from '../core/coreFeatures'
 import type { CellData, RowData } from './type-utils'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
-import type { Header_Header } from '../core/headers/coreHeadersFeature.types'
 
-export interface Header_Plugins {}
-
-export interface Header_Core<
+export interface Header_Plugins<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-> extends Header_Header<TFeatures, TData, TValue>,
-    Header_Plugins {}
+> {}
+
+// export interface Header_Core<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+//   TValue extends CellData = CellData,
+// > extends Header_Header<TFeatures, TData, TValue>,
+//     Header_Plugins {}
+
+export type Header_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = ExtractFeatureTypes<typeof coreFeatures, 'Header'>
 
 // export type Header<
 //   TFeatures extends TableFeatures,
@@ -30,4 +40,5 @@ export type Header<
   TData extends RowData,
   TValue extends CellData = CellData,
 > = Header_Core<TFeatures, TData, TValue> &
-  ExtractFeatureTypes<TFeatures, 'Header'>
+  ExtractFeatureTypes<TFeatures, 'Header'> &
+  Header_Plugins<TFeatures, TData, TValue>

@@ -1,30 +1,34 @@
+import type { coreFeatures } from '../core/coreFeatures'
 import type { TableOptions_All } from './TableOptions'
-import type { Table_Table } from '../core/table/coreTablesFeature.types'
-import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
-import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
-import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 import type { RowData } from './type-utils'
 import type { TableState_All } from './TableState'
 import type { RowModelFns_All } from './RowModelFns'
 import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
-import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
 
-export interface Table_Plugins {}
+export interface Table_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
 /**
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
  * No features are included.
  */
+// export type Table_Core<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+// > = Table_Table<TFeatures, TData> &
+//   Table_Columns<TFeatures, TData> &
+//   Table_Rows<TFeatures, TData> &
+//   Table_RowModels<TFeatures, TData> &
+//   Table_Headers<TFeatures, TData> &
+//   Table_Plugins<TFeatures, TData>
+
 export type Table_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Table_Table<TFeatures, TData> &
-  Table_Columns<TFeatures, TData> &
-  Table_Rows<TFeatures, TData> &
-  Table_RowModels<TFeatures, TData> &
-  Table_Headers<TFeatures, TData> &
-  Table_Plugins
+> = ExtractFeatureTypes<typeof coreFeatures, 'Table'>
 
 /**
  * The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
@@ -81,16 +85,18 @@ export type Table_Core<
 export type Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Table_Core<TFeatures, TData> & ExtractFeatureTypes<TFeatures, 'Table'>
+> = Table_Core<TFeatures, TData> &
+  ExtractFeatureTypes<TFeatures, 'Table'> &
+  Table_Plugins<TFeatures, TData>
 
 export type Table_Internal<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Table<TFeatures, TData> & {
-  _rowModels: CachedRowModel_All<TFeatures, TData>
-  _rowModelFns: RowModelFns_All<TFeatures, TData>
-  options: TableOptions_All<TFeatures, TData> & {
-    _rowModels?: CreateRowModels_All<TFeatures, TData>
+  _rowModels: CachedRowModel_All<TData>
+  _rowModelFns: RowModelFns_All<TData>
+  options: TableOptions_All<TData> & {
+    _rowModels?: CreateRowModels_All<TData>
     state?: TableState_All
     initialState?: TableState_All
   }

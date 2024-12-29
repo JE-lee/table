@@ -4,11 +4,13 @@ import {
   cell_getValue,
   cell_renderValue,
 } from './coreCellsFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { Cell_Cell, TableOptions_Cell } from './coreCellsFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
 export const coreCellsFeature: TableFeature<{
-  // Cell: Cell_Cell<TableFeatures, RowData, CellData>
-  // TableOptions: TableOptions_Cell
+  Cell: Cell_Cell<TableFeatures, RowData>
+  TableOptions: TableOptions_Cell
 }> = {
   constructCellAPIs: (cell) => {
     assignAPIs(cell, [

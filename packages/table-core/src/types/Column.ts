@@ -1,16 +1,26 @@
-import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 import type { RowData } from './type-utils'
 import type { ColumnDefBase_All } from './ColumnDef'
+import type { coreFeatures } from '../core/coreFeatures'
 
-export interface Column_Plugins {}
-
-export interface Column_Core<
+export interface Column_Plugins<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> extends Column_Column<TFeatures, TData, TValue>,
-    Column_Plugins {}
+> {}
+
+// export interface Column_Core<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+//   TValue = unknown,
+// > extends Column_Column<TFeatures, TData, TValue>,
+//     Column_Plugins {}
+
+export type Column_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> = ExtractFeatureTypes<typeof coreFeatures, 'Column'>
 
 // export type Column<
 //   TFeatures extends TableFeatures,
@@ -55,12 +65,13 @@ export type Column<
   TData extends RowData,
   TValue = unknown,
 > = Column_Core<TFeatures, TData, TValue> &
-  ExtractFeatureTypes<TFeatures, 'Column'>
+  ExtractFeatureTypes<TFeatures, 'Column'> &
+  Column_Plugins<TFeatures, TData, TValue>
 
 export type Column_Internal<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> = Column<TFeatures, TData, TValue> & {
-  columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
+> = Omit<Column<TFeatures, TData, TValue>, 'columnDef'> & {
+  columnDef: ColumnDefBase_All<TData, TValue>
 }
