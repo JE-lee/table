@@ -18,8 +18,10 @@ export type ExtractFeatureTypes<
     [K in keyof TFeatures]: TFeatures[K] extends TableFeature<
       infer FeatureConstructorOptions
     >
-      ? FeatureConstructorOptions[TKey]
-      : never
+      ? TKey extends keyof FeatureConstructorOptions
+        ? FeatureConstructorOptions[TKey]
+        : never
+      : any
   }[keyof TFeatures]
 >
 
